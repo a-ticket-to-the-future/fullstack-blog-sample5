@@ -26,3 +26,44 @@ export const GET = async (req:Request,res:NextResponse) => {
      await prisma.$disconnect();
     }
  };
+
+
+ //ブログ編集用API
+ export const PUT = async (req:Request,res:NextResponse) => {
+    try{
+        const id:number = parseInt (req.url.split("/blog/")[1]); //splitで区切ることで0番目と１番目の配列ができるので１番をとってくるとidだけ取ることができる
+
+        const {title,description,image} = await req.json();
+
+     await main();
+     const post = await prisma.post.update({data:{title,description,image},
+                                            where:{id},
+    })
+     return NextResponse.json({message:"Success",post},{status:200});
+ 
+    }catch(err) {
+     return NextResponse.json({message:"Error"},{status:500})
+    }finally{
+     await prisma.$disconnect();
+    }
+ };
+
+
+ //削除用API
+ export const DELETE = async (req:Request,res:NextResponse) => {
+    try{
+        const id:number = parseInt (req.url.split("/blog/")[1]); //splitで区切ることで0番目と１番目の配列ができるので１番をとってくるとidだけ取ることができる
+
+
+     await main();
+     const post = await prisma.post.delete({
+        where:{id},
+     })
+     return NextResponse.json({message:"Success",post},{status:200});
+ 
+    }catch(err) {
+     return NextResponse.json({message:"Error"},{status:500})
+    }finally{
+     await prisma.$disconnect();
+    }
+ };
